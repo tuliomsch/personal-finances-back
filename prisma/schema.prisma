@@ -1,0 +1,187 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  name         String
+  lastName     String    @map("last_name")
+  email        String    @unique
+  supabaseId   String    @unique @map("supabase_id")
+  currencyPref String    @map("currency_pref") @db.VarChar(3)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  deletedAt    DateTime? @map("deleted_at")
+
+  accounts      Account[]
+  categories    Category[]
+  transactions  Transaction[]
+  budgets       Budget[]
+  merchantRules MerchantRule[]
+
+  @@map("users")
+}
+
+model Account {
+  id           Int         @id @default(autoincrement())
+  userId       Int         @map("user_id")
+  name         String
+  type         AccountType
+  balance      Decimal     @db.Decimal(19, 4)
+  currencyCode String      @map("currency_code") @db.VarChar(3)
+  bankName     BankName?   @map("bank_name")
+  isActive     Boolean     @default(true) @map("is_active")
+  deletedAt    DateTime?   @map("deleted_at")
+
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions      Transaction[] @relation("account_transactions")
+  transferToAccount Transaction[] @relation("transfer_to_account")
+
+  @@map("accounts")
+}
+
+model Category {
+  id        Int          @id @default(autoincrement())
+  userId    Int?         @map("user_id")
+  parentId  Int?         @map("parent_id")
+  name      String
+  icon      String?
+  type      CategoryType
+  createdAt DateTime     @default(now()) @map("created_at")
+  deletedAt DateTime?    @map("deleted_at")
+
+  user          User?          @relation(fields: [userId], references: [id])
+  parent        Category?      @relation("SubCategories", fields: [parentId], references: [id])
+  subCategories Category[]     @relation("SubCategories")
+  transactions  Transaction[]
+  budgets       Budget[]
+  merchantRules MerchantRule[]
+
+  @@map("categories")
+}
+
+model Transaction {
+  id              Int             @id @default(autoincrement())
+  transactionHash String          @unique @map("transaction_hash")
+  accountId       Int             @map("account_id")
+  categoryId      Int?            @map("category_id")
+  userId          Int             @map("user_id")
+  type            TransactionType
+  amount          Decimal         @db.Decimal(19, 4)
+  transactionDate DateTime        @map("transaction_date")
+  rawDescription  String?         @map("raw_description")
+  description     String?
+  source          SourceType      @default(MANUAL)
+  transferToId    Int?
+  isReconciled    Boolean         @default(false) @map("is_reconciled")
+  deletedAt       DateTime?
+
+  account    Account   @relation("account_transactions", fields: [accountId], references: [id], onDelete: Restrict)
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  user       User      @relation(fields: [userId], references: [id])
+  transferTo Account?  @relation("transfer_to_account", fields: [transferToId], references: [id])
+
+  @@index([userId])
+  @@index([transactionDate])
+  @@index([categoryId])
+  @@map("transactions")
+}
+
+model Budget {
+  id          Int        @id @default(autoincrement())
+  userId      Int        @map("user_id")
+  categoryId  Int        @map("category_id")
+  amountLimit Decimal    @map("amount_limit") @db.Decimal(19, 4)
+  startDate   DateTime   @map("start_date") @db.Date
+  endDate     DateTime   @map("end_date") @db.Date
+  periodType  PeriodType @map("period_type")
+  rollover    Boolean    @default(false)
+  deletedAt   DateTime?  @map("deleted_at")
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  @@map("budgets")
+}
+
+model MerchantRule {
+  id               Int       @id @default(autoincrement())
+  userId           Int?      @map("user_id")
+  keyword          String
+  targetName       String    @map("target_name")
+  targetCategoryId Int?      @map("target_category_id")
+  matchType        MatchType @default(CONTAINS) @map("match_type")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  user     User?     @relation(fields: [userId], references: [id])
+  category Category? @relation(fields: [targetCategoryId], references: [id])
+
+  @@map("merchant_rules")
+}
+
+enum AccountType {
+  CASH
+  CHECKING
+  DEPOSIT
+  SAVINGS
+  CREDIT_CARD
+}
+
+enum CategoryType {
+  INCOME
+  EXPENSE
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  TRANSFER
+}
+
+enum PeriodType {
+  MONTHLY
+  WEEKLY
+  CUSTOM
+}
+
+enum SourceType {
+  MANUAL
+  CSV
+  MAIL
+}
+
+enum MatchType {
+  CONTAINS
+  EXACT
+  STARTS_WITH
+  ENDS_WITH
+}
+enum BankName {
+  BANCO_DE_CHILE
+  BANCO_SANTANDER
+  BANCO_ESTADO
+  SCOTIABANK
+  BCI
+  ITAU
+  BANCO_FALABELLA
+  BANCO_RIPLEY
+  BANCO_CONSORCIO
+  BANCO_SECURITY
+  BANCO_BICE
+  BANCO_INTERNACIONAL
+  COOPEUCH
+  TENPO
+  MERCADO_PAGO
+  OTRO
+}
