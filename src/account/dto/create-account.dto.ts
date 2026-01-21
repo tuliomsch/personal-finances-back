@@ -24,7 +24,4 @@ export class CreateAccountDto {
 
     @IsString()
     bankName?: BankName;
-
-    @IsBoolean()
-    isActive?: boolean;
 }
