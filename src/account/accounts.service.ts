@@ -35,14 +35,33 @@ export class AccountService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} account`;
+    return this.prisma.account.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
   update(id: number, updateAccountDto: UpdateAccountDto) {
-    return `This action updates a #${id} account`;
+    return this.prisma.account.update({
+      where: {
+        id,
+      },
+      data: {
+        ...updateAccountDto,
+      },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} account`;
+    return this.prisma.account.update({
+      where: {
+        id,
+      },
+      data: {
+        isActive: false,
+        deletedAt: new Date(),
+      },
+    });
   }
 }
