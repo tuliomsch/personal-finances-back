@@ -1,5 +1,5 @@
 import { AccountType, BankName } from "../../generated/prisma/client";
-import { IsNotEmpty, IsNumber, IsString, IsBoolean } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, IsOptional } from 'class-validator';
 
 export class CreateAccountDto {
     @IsNotEmpty()
@@ -26,5 +26,6 @@ export class CreateAccountDto {
     bankName?: BankName;
 
     @IsNumber()
+    @IsOptional()
     cardDebt?: number;
 }
