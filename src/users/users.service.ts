@@ -44,6 +44,7 @@ export class UsersService {
         balance: account.balance,
         currencyCode: createUserDto.currencyPref,
         bankName: account.bankName as BankName,
+        cardDebt: account.cardDebt,
       };
     });
 

@@ -24,4 +24,7 @@ export class CreateAccountDto {
 
     @IsString()
     bankName?: BankName;
+
+    @IsNumber()
+    cardDebt?: number;
 }

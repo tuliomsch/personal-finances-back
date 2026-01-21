@@ -39,6 +39,7 @@ model Account {
   name         String
   type         AccountType
   balance      Decimal     @db.Decimal(19, 4)
+  cardDebt     Decimal?    @db.Decimal(19, 4)
   currencyCode String      @map("currency_code") @db.VarChar(3)
   bankName     BankName?   @map("bank_name")
   isActive     Boolean     @default(true) @map("is_active")
