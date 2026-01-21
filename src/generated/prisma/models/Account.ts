@@ -30,12 +30,14 @@ export type AccountAvgAggregateOutputType = {
   id: number | null
   userId: number | null
   balance: runtime.Decimal | null
+  cardDebt: runtime.Decimal | null
 }
 
 export type AccountSumAggregateOutputType = {
   id: number | null
   userId: number | null
   balance: runtime.Decimal | null
+  cardDebt: runtime.Decimal | null
 }
 
 export type AccountMinAggregateOutputType = {
@@ -44,6 +46,7 @@ export type AccountMinAggregateOutputType = {
   name: string | null
   type: $Enums.AccountType | null
   balance: runtime.Decimal | null
+  cardDebt: runtime.Decimal | null
   currencyCode: string | null
   bankName: $Enums.BankName | null
   isActive: boolean | null
@@ -56,6 +59,7 @@ export type AccountMaxAggregateOutputType = {
   name: string | null
   type: $Enums.AccountType | null
   balance: runtime.Decimal | null
+  cardDebt: runtime.Decimal | null
   currencyCode: string | null
   bankName: $Enums.BankName | null
   isActive: boolean | null
@@ -68,6 +72,7 @@ export type AccountCountAggregateOutputType = {
   name: number
   type: number
   balance: number
+  cardDebt: number
   currencyCode: number
   bankName: number
   isActive: number
@@ -80,12 +85,14 @@ export type AccountAvgAggregateInputType = {
   id?: true
   userId?: true
   balance?: true
+  cardDebt?: true
 }
 
 export type AccountSumAggregateInputType = {
   id?: true
   userId?: true
   balance?: true
+  cardDebt?: true
 }
 
 export type AccountMinAggregateInputType = {
@@ -94,6 +101,7 @@ export type AccountMinAggregateInputType = {
   name?: true
   type?: true
   balance?: true
+  cardDebt?: true
   currencyCode?: true
   bankName?: true
   isActive?: true
@@ -106,6 +114,7 @@ export type AccountMaxAggregateInputType = {
   name?: true
   type?: true
   balance?: true
+  cardDebt?: true
   currencyCode?: true
   bankName?: true
   isActive?: true
@@ -118,6 +127,7 @@ export type AccountCountAggregateInputType = {
   name?: true
   type?: true
   balance?: true
+  cardDebt?: true
   currencyCode?: true
   bankName?: true
   isActive?: true
@@ -217,6 +227,7 @@ export type AccountGroupByOutputType = {
   name: string
   type: $Enums.AccountType
   balance: runtime.Decimal
+  cardDebt: runtime.Decimal | null
   currencyCode: string
   bankName: $Enums.BankName | null
   isActive: boolean
@@ -252,6 +263,7 @@ export type AccountWhereInput = {
   name?: Prisma.StringFilter<"Account"> | string
   type?: Prisma.EnumAccountTypeFilter<"Account"> | $Enums.AccountType
   balance?: Prisma.DecimalFilter<"Account"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: Prisma.DecimalNullableFilter<"Account"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode?: Prisma.StringFilter<"Account"> | string
   bankName?: Prisma.EnumBankNameNullableFilter<"Account"> | $Enums.BankName | null
   isActive?: Prisma.BoolFilter<"Account"> | boolean
@@ -267,6 +279,7 @@ export type AccountOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
   balance?: Prisma.SortOrder
+  cardDebt?: Prisma.SortOrderInput | Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
   bankName?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -285,6 +298,7 @@ export type AccountWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Account"> | string
   type?: Prisma.EnumAccountTypeFilter<"Account"> | $Enums.AccountType
   balance?: Prisma.DecimalFilter<"Account"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: Prisma.DecimalNullableFilter<"Account"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode?: Prisma.StringFilter<"Account"> | string
   bankName?: Prisma.EnumBankNameNullableFilter<"Account"> | $Enums.BankName | null
   isActive?: Prisma.BoolFilter<"Account"> | boolean
@@ -300,6 +314,7 @@ export type AccountOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
   balance?: Prisma.SortOrder
+  cardDebt?: Prisma.SortOrderInput | Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
   bankName?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -320,6 +335,7 @@ export type AccountScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Account"> | string
   type?: Prisma.EnumAccountTypeWithAggregatesFilter<"Account"> | $Enums.AccountType
   balance?: Prisma.DecimalWithAggregatesFilter<"Account"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: Prisma.DecimalNullableWithAggregatesFilter<"Account"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode?: Prisma.StringWithAggregatesFilter<"Account"> | string
   bankName?: Prisma.EnumBankNameNullableWithAggregatesFilter<"Account"> | $Enums.BankName | null
   isActive?: Prisma.BoolWithAggregatesFilter<"Account"> | boolean
@@ -330,6 +346,7 @@ export type AccountCreateInput = {
   name: string
   type: $Enums.AccountType
   balance: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode: string
   bankName?: $Enums.BankName | null
   isActive?: boolean
@@ -345,6 +362,7 @@ export type AccountUncheckedCreateInput = {
   name: string
   type: $Enums.AccountType
   balance: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode: string
   bankName?: $Enums.BankName | null
   isActive?: boolean
@@ -357,6 +375,7 @@ export type AccountUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.NullableEnumBankNameFieldUpdateOperationsInput | $Enums.BankName | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -372,6 +391,7 @@ export type AccountUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.NullableEnumBankNameFieldUpdateOperationsInput | $Enums.BankName | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -386,6 +406,7 @@ export type AccountCreateManyInput = {
   name: string
   type: $Enums.AccountType
   balance: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode: string
   bankName?: $Enums.BankName | null
   isActive?: boolean
@@ -396,6 +417,7 @@ export type AccountUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.NullableEnumBankNameFieldUpdateOperationsInput | $Enums.BankName | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -408,6 +430,7 @@ export type AccountUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.NullableEnumBankNameFieldUpdateOperationsInput | $Enums.BankName | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -430,6 +453,7 @@ export type AccountCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
   balance?: Prisma.SortOrder
+  cardDebt?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
   bankName?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -440,6 +464,7 @@ export type AccountAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   balance?: Prisma.SortOrder
+  cardDebt?: Prisma.SortOrder
 }
 
 export type AccountMaxOrderByAggregateInput = {
@@ -448,6 +473,7 @@ export type AccountMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
   balance?: Prisma.SortOrder
+  cardDebt?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
   bankName?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -460,6 +486,7 @@ export type AccountMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
   balance?: Prisma.SortOrder
+  cardDebt?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
   bankName?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -470,6 +497,7 @@ export type AccountSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   balance?: Prisma.SortOrder
+  cardDebt?: Prisma.SortOrder
 }
 
 export type AccountScalarRelationFilter = {
@@ -536,6 +564,14 @@ export type DecimalFieldUpdateOperationsInput = {
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
+export type NullableDecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
 export type NullableEnumBankNameFieldUpdateOperationsInput = {
   set?: $Enums.BankName | null
 }
@@ -578,6 +614,7 @@ export type AccountCreateWithoutUserInput = {
   name: string
   type: $Enums.AccountType
   balance: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode: string
   bankName?: $Enums.BankName | null
   isActive?: boolean
@@ -591,6 +628,7 @@ export type AccountUncheckedCreateWithoutUserInput = {
   name: string
   type: $Enums.AccountType
   balance: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode: string
   bankName?: $Enums.BankName | null
   isActive?: boolean
@@ -634,6 +672,7 @@ export type AccountScalarWhereInput = {
   name?: Prisma.StringFilter<"Account"> | string
   type?: Prisma.EnumAccountTypeFilter<"Account"> | $Enums.AccountType
   balance?: Prisma.DecimalFilter<"Account"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: Prisma.DecimalNullableFilter<"Account"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode?: Prisma.StringFilter<"Account"> | string
   bankName?: Prisma.EnumBankNameNullableFilter<"Account"> | $Enums.BankName | null
   isActive?: Prisma.BoolFilter<"Account"> | boolean
@@ -644,6 +683,7 @@ export type AccountCreateWithoutTransactionsInput = {
   name: string
   type: $Enums.AccountType
   balance: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode: string
   bankName?: $Enums.BankName | null
   isActive?: boolean
@@ -658,6 +698,7 @@ export type AccountUncheckedCreateWithoutTransactionsInput = {
   name: string
   type: $Enums.AccountType
   balance: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode: string
   bankName?: $Enums.BankName | null
   isActive?: boolean
@@ -674,6 +715,7 @@ export type AccountCreateWithoutTransferToAccountInput = {
   name: string
   type: $Enums.AccountType
   balance: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode: string
   bankName?: $Enums.BankName | null
   isActive?: boolean
@@ -688,6 +730,7 @@ export type AccountUncheckedCreateWithoutTransferToAccountInput = {
   name: string
   type: $Enums.AccountType
   balance: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode: string
   bankName?: $Enums.BankName | null
   isActive?: boolean
@@ -715,6 +758,7 @@ export type AccountUpdateWithoutTransactionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.NullableEnumBankNameFieldUpdateOperationsInput | $Enums.BankName | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -729,6 +773,7 @@ export type AccountUncheckedUpdateWithoutTransactionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.NullableEnumBankNameFieldUpdateOperationsInput | $Enums.BankName | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -751,6 +796,7 @@ export type AccountUpdateWithoutTransferToAccountInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.NullableEnumBankNameFieldUpdateOperationsInput | $Enums.BankName | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -765,6 +811,7 @@ export type AccountUncheckedUpdateWithoutTransferToAccountInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.NullableEnumBankNameFieldUpdateOperationsInput | $Enums.BankName | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -777,6 +824,7 @@ export type AccountCreateManyUserInput = {
   name: string
   type: $Enums.AccountType
   balance: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode: string
   bankName?: $Enums.BankName | null
   isActive?: boolean
@@ -787,6 +835,7 @@ export type AccountUpdateWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.NullableEnumBankNameFieldUpdateOperationsInput | $Enums.BankName | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -800,6 +849,7 @@ export type AccountUncheckedUpdateWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.NullableEnumBankNameFieldUpdateOperationsInput | $Enums.BankName | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -813,6 +863,7 @@ export type AccountUncheckedUpdateManyWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cardDebt?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.NullableEnumBankNameFieldUpdateOperationsInput | $Enums.BankName | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -865,6 +916,7 @@ export type AccountSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name?: boolean
   type?: boolean
   balance?: boolean
+  cardDebt?: boolean
   currencyCode?: boolean
   bankName?: boolean
   isActive?: boolean
@@ -881,6 +933,7 @@ export type AccountSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   type?: boolean
   balance?: boolean
+  cardDebt?: boolean
   currencyCode?: boolean
   bankName?: boolean
   isActive?: boolean
@@ -894,6 +947,7 @@ export type AccountSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   type?: boolean
   balance?: boolean
+  cardDebt?: boolean
   currencyCode?: boolean
   bankName?: boolean
   isActive?: boolean
@@ -907,13 +961,14 @@ export type AccountSelectScalar = {
   name?: boolean
   type?: boolean
   balance?: boolean
+  cardDebt?: boolean
   currencyCode?: boolean
   bankName?: boolean
   isActive?: boolean
   deletedAt?: boolean
 }
 
-export type AccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "type" | "balance" | "currencyCode" | "bankName" | "isActive" | "deletedAt", ExtArgs["result"]["account"]>
+export type AccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "type" | "balance" | "cardDebt" | "currencyCode" | "bankName" | "isActive" | "deletedAt", ExtArgs["result"]["account"]>
 export type AccountInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   transactions?: boolean | Prisma.Account$transactionsArgs<ExtArgs>
@@ -940,6 +995,7 @@ export type $AccountPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     name: string
     type: $Enums.AccountType
     balance: runtime.Decimal
+    cardDebt: runtime.Decimal | null
     currencyCode: string
     bankName: $Enums.BankName | null
     isActive: boolean
@@ -1375,6 +1431,7 @@ export interface AccountFieldRefs {
   readonly name: Prisma.FieldRef<"Account", 'String'>
   readonly type: Prisma.FieldRef<"Account", 'AccountType'>
   readonly balance: Prisma.FieldRef<"Account", 'Decimal'>
+  readonly cardDebt: Prisma.FieldRef<"Account", 'Decimal'>
   readonly currencyCode: Prisma.FieldRef<"Account", 'String'>
   readonly bankName: Prisma.FieldRef<"Account", 'BankName'>
   readonly isActive: Prisma.FieldRef<"Account", 'Boolean'>

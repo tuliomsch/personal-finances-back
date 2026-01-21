@@ -28,11 +28,12 @@ export class AccountService {
         balance: true,
         currencyCode: true,
         bankName: true,
+        cardDebt: true,
       },
     });
     const totalBalance = accounts.reduce((acc, account) => {
       if (account.type == 'CREDIT_CARD') {
-        return acc;
+        return acc - Number(account.cardDebt);
       }
       return acc + Number(account.balance);
     }, 0);

@@ -912,6 +912,7 @@ export const AccountScalarFieldEnum = {
   name: 'name',
   type: 'type',
   balance: 'balance',
+  cardDebt: 'cardDebt',
   currencyCode: 'currencyCode',
   bankName: 'bankName',
   isActive: 'isActive',

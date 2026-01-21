@@ -28,5 +28,6 @@ export class RegisterUserDto {
     balance: number;
     name: string;
     bankName?: string;
+    cardDebt?: number;
   }[];
 }
