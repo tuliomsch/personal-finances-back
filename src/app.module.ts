@@ -10,7 +10,12 @@ import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      envFilePath: process.env.NODE_ENV === 'production'
+        ? '.env.production'
+        : '.env.development',
+      isGlobal: true,
+    }),
     PrismaModule,
     TransactionsModule,
     UsersModule,

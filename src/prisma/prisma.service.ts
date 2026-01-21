@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '../generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { config } from 'dotenv';
 
 @Injectable()
 export class PrismaService extends PrismaClient {
   constructor() {
+    const env = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
+    config({ path: env });
     const connectionString = process.env.DATABASE_URL;
     if (!connectionString) {
       throw new Error(

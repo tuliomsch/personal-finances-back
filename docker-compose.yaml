@@ -1,0 +1,24 @@
+services:
+  api:
+    container_name: nestjs-backend-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    
+    # CAMBIO AQUÍ: Le decimos "Carga todas las variables desde este archivo"
+    env_file:
+      - .env.development
+
+    # Aún puedes usar 'environment' para sobrescribir cosas puntuales si quieres
+    environment:
+      - PORT=3000
+      - NODE_ENV=development 
+      # Las demás (DATABASE_URL, WORKER_SECRET) las tomará del archivo .env.development
+
+    command: npm run start:dev
