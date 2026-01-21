@@ -30,7 +30,12 @@ export class AccountService {
         bankName: true,
       },
     });
-    const totalBalance = accounts.reduce((acc, account) => acc + Number(account.balance), 0);
+    const totalBalance = accounts.reduce((acc, account) => {
+      if (account.type == 'CREDIT_CARD') {
+        return acc;
+      }
+      return acc + Number(account.balance);
+    }, 0);
     return { accounts, totalBalance };
   }
 
