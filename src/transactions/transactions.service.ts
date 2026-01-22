@@ -112,7 +112,10 @@ export class TransactionsService {
         transactionDate: true,
         type: true,
         category: true,
-      }
+      },
+      orderBy: {
+        transactionDate: 'desc',
+      },
     });
 
     const totalIncome = transactions.filter((t) => t.type === TransactionType.INCOME).reduce((acc, t) => acc + Number(t.amount), 0);
