@@ -50,11 +50,9 @@ export class TransactionsService {
         }
       }
 
-      // Determinar monto del movimiento para la cuenta origen
-      // EXPENSE o TRANSFER => Resta
-      // INCOME => Suma
-      const isExpenseOrTransfer = data.type === TransactionType.EXPENSE || data.type === TransactionType.TRANSFER;
-      const movementAmount = isExpenseOrTransfer ? -data.amount : data.amount;
+      const isCreditCard = account.type === 'CREDIT_CARD';
+      const isExpense = data.type === TransactionType.EXPENSE;
+      const isTransfer = data.type === TransactionType.TRANSFER;
 
       const newTransaction = await tx.transaction.create({
         data: {
@@ -64,17 +62,30 @@ export class TransactionsService {
         },
       });
 
-      const updatedAccount = await tx.account.update({
-        where: { id: data.accountId },
-        data: {
-          balance: {
-            increment: movementAmount,
+      if (isCreditCard && isExpense) {
+        await tx.account.update({
+          where: { id: data.accountId },
+          data: {
+            cardDebt: {
+              increment: data.amount,
+            },
           },
-        },
-      });
+        });
+      } else {
+        const isExpenseOrTransfer = isExpense || isTransfer;
+        const movementAmount = isExpenseOrTransfer ? -data.amount : data.amount;
 
-      // Si es transferencia, actualizar cuenta destino (sumar)
-      if (data.type === TransactionType.TRANSFER && data.transferToId) {
+        await tx.account.update({
+          where: { id: data.accountId },
+          data: {
+            balance: {
+              increment: movementAmount,
+            },
+          },
+        });
+      }
+
+      if (isTransfer && data.transferToId) {
         await tx.account.update({
           where: { id: data.transferToId },
           data: {
@@ -85,7 +96,7 @@ export class TransactionsService {
         });
       }
 
-      return { transaction: newTransaction, account: updatedAccount };
+      return { transaction: newTransaction, account };
     });
   }
 
