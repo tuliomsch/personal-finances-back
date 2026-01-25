@@ -9,13 +9,7 @@ import { TransactionType } from 'src/generated/prisma/enums';
 export class TransactionsService {
   constructor(private readonly prisma: PrismaService) { }
 
-  async createTransaction(data: CreateManualTransactionDto) {
-    const hashInput = {
-      date: data.transactionDate,
-      amount: data.amount,
-      rawDescription: data.rawDescription,
-      accountId: data.accountId,
-    };
+  async createManualTransaction(data: CreateManualTransactionDto) {
     return await this.prisma.$transaction(async (tx) => {
       const account = await tx.account.findFirst({
         where: {
@@ -53,6 +47,23 @@ export class TransactionsService {
       const isCreditCard = account.type === 'CREDIT_CARD';
       const isExpense = data.type === TransactionType.EXPENSE;
       const isTransfer = data.type === TransactionType.TRANSFER;
+
+      const counter = await tx.transaction.count({
+        where: {
+          accountId: data.accountId,
+          transactionDate: data.transactionDate,
+          amount: data.amount,
+          rawDescription: data.rawDescription,
+        },
+      });
+
+      const hashInput = {
+        date: data.transactionDate,
+        amount: data.amount,
+        rawDescription: data.rawDescription,
+        accountId: data.accountId,
+        counter,
+      };
 
       const newTransaction = await tx.transaction.create({
         data: {
@@ -100,11 +111,20 @@ export class TransactionsService {
     });
   }
 
-  async findAllByUser(userId: string) {
+  async findAllByUser(userId: string, startDate?: string, endDate?: string) {
+    const where: any = {
+      userId: parseInt(userId),
+    };
+
+    if (startDate && endDate) {
+      where.transactionDate = {
+        gte: new Date(startDate).toISOString(),
+        lte: new Date(endDate).toISOString(),
+      };
+    }
+
     const transactions = await this.prisma.transaction.findMany({
-      where: {
-        userId: parseInt(userId),
-      },
+      where,
       select: {
         id: true,
         description: true,
