@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateManualTransactionDto } from './dto/create-transaction.dto';
@@ -23,14 +24,22 @@ export class TransactionsController {
 
   @Post()
   create(@Body() createManualTransactionDto: CreateManualTransactionDto) {
-    return this.transactionsService.createTransaction(
+    return this.transactionsService.createManualTransaction(
       createManualTransactionDto,
     );
   }
 
   @Get('user/:userId')
-  findAllByUser(@Param('userId') userId: string) {
-    return this.transactionsService.findAllByUser(userId);
+  findAllByUser(
+    @Param('userId') userId: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    return this.transactionsService.findAllByUser(
+      userId,
+      startDate,
+      endDate,
+    );
   }
 
   @Get(':id')
