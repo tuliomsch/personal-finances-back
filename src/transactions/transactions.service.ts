@@ -97,14 +97,26 @@ export class TransactionsService {
       }
 
       if (isTransfer && data.transferToId) {
-        await tx.account.update({
-          where: { id: data.transferToId },
-          data: {
-            balance: {
-              increment: data.amount
+        if (transferToAccount.type === 'CREDIT_CARD') {
+          await tx.account.update({
+            where: { id: data.transferToId},
+            data: {
+              cardDebt: {
+                decrement: data.amount
+              }
             }
-          }
-        });
+          })
+        }
+        else {   
+          await tx.account.update({
+            where: { id: data.transferToId },
+            data: {
+              balance: {
+                increment: data.amount
+              }
+            }
+          });
+        }
       }
 
       return { transaction: newTransaction, account };
