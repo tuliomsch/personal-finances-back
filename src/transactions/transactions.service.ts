@@ -97,6 +97,236 @@ export class TransactionsService {
     return { transactions, totalIncome, totalExpense };
   }
 
+  private async getAggregatedExpenseData(userId: string, startDate?: string, endDate?: string) {
+    const where: any = {
+      userId: parseInt(userId),
+      type: TransactionType.EXPENSE,
+    };
+
+    if (startDate && endDate) {
+      where.transactionDate = {
+        gte: new Date(startDate).toISOString(),
+        lte: new Date(endDate).toISOString(),
+      };
+    }
+
+    const expenses = await this.prisma.transaction.findMany({
+      where,
+      select: {
+        id: true,
+        amount: true,
+        transactionDate: true,
+        category: {
+          select: {
+            id: true,
+            name: true,
+            icon: true,
+            parentId: true,
+            parent: {
+              select: {
+                id: true,
+                name: true,
+                icon: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        transactionDate: 'desc',
+      },
+    });
+
+    return expenses;
+  }
+
+  async getExpenseAnalyticsSummary(userId: string, startDate?: string, endDate?: string, limit: number = 5) {
+    const expenses = await this.getAggregatedExpenseData(userId, startDate, endDate);
+    const totalExpense = expenses.reduce((acc, t) => acc + Number(t.amount), 0);
+
+    const categoryMap = new Map<number, {
+      id: number;
+      name: string;
+      icon: string;
+      amount: number;
+      percentage: number;
+    }>();
+
+    expenses.forEach((expense) => {
+      if (!expense.category) return;
+
+      const parentCategory = expense.category.parent || expense.category;
+      const categoryId = parentCategory.id;
+
+      if (!categoryMap.has(categoryId)) {
+        categoryMap.set(categoryId, {
+          id: categoryId,
+          name: parentCategory.name || 'Sin categoría',
+          icon: parentCategory.icon || '❓',
+          amount: 0,
+          percentage: 0,
+        });
+      }
+
+      const category = categoryMap.get(categoryId)!;
+      category.amount += Number(expense.amount);
+    });
+
+    const topCategories = Array.from(categoryMap.values())
+      .map((cat) => ({
+        ...cat,
+        percentage: totalExpense > 0 ? (cat.amount / totalExpense) * 100 : 0,
+      }))
+      .sort((a, b) => b.amount - a.amount)
+      .slice(0, limit);
+
+    return {
+      totalExpense,
+      topCategories,
+    };
+  }
+
+  async getCategoryDistribution(userId: string, startDate?: string, endDate?: string) {
+    const expenses = await this.getAggregatedExpenseData(userId, startDate, endDate);
+    const totalExpense = expenses.reduce((acc, t) => acc + Number(t.amount), 0);
+
+    const categoryMap = new Map<number, {
+      id: number;
+      name: string;
+      icon: string;
+      amount: number;
+      percentage: number;
+      subCategories: Array<{
+        id: number;
+        name: string;
+        icon: string;
+        amount: number;
+        percentage: number;
+      }>;
+    }>();
+
+    expenses.forEach((expense) => {
+      if (!expense.category) return;
+
+      const parentCategory = expense.category.parent || expense.category;
+      const categoryId = parentCategory.id;
+
+      if (!categoryMap.has(categoryId)) {
+        categoryMap.set(categoryId, {
+          id: categoryId,
+          name: parentCategory.name || 'Sin categoría',
+          icon: parentCategory.icon || '❓',
+          amount: 0,
+          percentage: 0,
+          subCategories: [],
+        });
+      }
+
+      const category = categoryMap.get(categoryId)!;
+      category.amount += Number(expense.amount);
+
+      if (expense.category && expense.category.parentId) {
+        const existingSubCat = category.subCategories.find(
+          (sc) => sc.id === expense.category!.id,
+        );
+        if (existingSubCat) {
+          existingSubCat.amount += Number(expense.amount);
+        } else {
+          category.subCategories.push({
+            id: expense.category.id,
+            name: expense.category.name || 'Sin nombre',
+            icon: expense.category.icon || '❓',
+            amount: Number(expense.amount),
+            percentage: 0,
+          });
+        }
+      }
+    });
+
+    const categories = Array.from(categoryMap.values())
+      .map((cat) => ({
+        ...cat,
+        percentage: totalExpense > 0 ? (cat.amount / totalExpense) * 100 : 0,
+        subCategories: cat.subCategories
+          .map((subCat) => ({
+            ...subCat,
+            percentage: cat.amount > 0 ? (subCat.amount / cat.amount) * 100 : 0,
+          }))
+          .sort((a, b) => b.amount - a.amount),
+      }))
+      .sort((a, b) => b.amount - a.amount);
+
+    return {
+      totalExpense,
+      categories,
+    };
+  }
+
+  async getMonthlyComparison(userId: string, startDate?: string, endDate?: string, prevStartDate?: string, prevEndDate?: string) {
+    const where: any = {
+      userId: parseInt(userId),
+      type: TransactionType.EXPENSE,
+    };
+
+    if (startDate && endDate) {
+      where.transactionDate = {
+        gte: new Date(startDate).toISOString(),
+        lte: new Date(endDate).toISOString(),
+      };
+    }
+
+    const currentExpenses = await this.prisma.transaction.groupBy({
+      by: ['type'],
+      where,
+      _sum: {
+        amount: true,
+      },
+    });
+
+    const totalExpense = currentExpenses.length > 0 ? Number(currentExpenses[0]._sum.amount) : 0;
+
+    let previousPeriodExpense = 0;
+    let monthComparison: {
+      current: number;
+      previous: number;
+      difference: number;
+      percentageChange: number;
+    } | null = null;
+
+    if (prevStartDate && prevEndDate) {
+      const prevStart = new Date(prevStartDate);
+      const prevEnd = new Date(prevEndDate);
+
+      const prevExpenses = await this.prisma.transaction.groupBy({
+        by: ['type'],
+        where: {
+          userId: parseInt(userId),
+          type: TransactionType.EXPENSE,
+          transactionDate: {
+            gte: prevStart.toISOString(),
+            lte: prevEnd.toISOString(),
+          },
+        },
+        _sum: {
+          amount: true,
+        },
+      });
+
+      previousPeriodExpense = prevExpenses.length > 0 ? Number(prevExpenses[0]._sum.amount) : 0;
+
+      monthComparison = {
+        current: totalExpense,
+        previous: previousPeriodExpense,
+        difference: totalExpense - previousPeriodExpense,
+        percentageChange: previousPeriodExpense > 0
+          ? ((totalExpense - previousPeriodExpense) / previousPeriodExpense) * 100
+          : 0,
+      };
+    }
+
+    return monthComparison;
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} transaction`;
   }
