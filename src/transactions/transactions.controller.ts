@@ -42,6 +42,51 @@ export class TransactionsController {
     );
   }
 
+  @Get('user/:userId/analytics/summary')
+  getExpenseAnalyticsSummary(
+    @Param('userId') userId: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.transactionsService.getExpenseAnalyticsSummary(
+      userId,
+      startDate,
+      endDate,
+      limit ? parseInt(limit) : 3,
+    );
+  }
+
+  @Get('user/:userId/analytics/distribution')
+  getCategoryDistribution(
+    @Param('userId') userId: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    return this.transactionsService.getCategoryDistribution(
+      userId,
+      startDate,
+      endDate,
+    );
+  }
+
+  @Get('user/:userId/analytics/comparison')
+  getMonthlyComparison(
+    @Param('userId') userId: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+    @Query('prevStartDate') prevStartDate?: string,
+    @Query('prevEndDate') prevEndDate?: string,
+  ) {
+    return this.transactionsService.getMonthlyComparison(
+      userId,
+      startDate,
+      endDate,
+      prevStartDate,
+      prevEndDate,
+    );
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.transactionsService.findOne(+id);
